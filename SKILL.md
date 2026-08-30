@@ -181,7 +181,31 @@ they've given you no actual evidence for.
 `create_trigger` + `fire_trigger` is the mechanism that actually works for
 waking a cold cloud session, or reaching a local wmux session, and getting a
 genuine reply back. `SendMessage` only delivers inertly to a cold cloud
-target. Tool surface varies independently of underlying capability, and
+target.
+
+A framing correction worth keeping, from a live discussion pushing back on
+an earlier draft of this section that called the trigger mechanism merely
+"async": that undersold it. `SendMessage` to a cold cloud target is
+genuinely email-like — it sits until someone happens to read it.
+`create_trigger`+`fire_trigger` is closer to a forced page or an SMS that
+guarantees a callback: it doesn't just deliver, it forces the target's
+harness to wake and produce a new turn, and a reply is a fresh instance of
+the same mechanism run in the other direction. By the ordinary human
+distinction between "real-time" (phone, live chat — bounded, forced
+liveness) and "store-and-forget" (email — arbitrary read delay), this
+belongs on the real-time side of that line, not the email side. The one
+disanalogy worth keeping precise: a phone call or open chat is a
+continuously live, ambient connection — each party knows the other is
+present before either finishes a turn. This mechanism isn't ambient; each
+leg is its own discrete, deliberately-initiated forced-wake event, not a
+standing open line. Closer to a reliable pager than a phone call — but
+decisively on the "wakes and gets a response" side, not the "may sit
+indefinitely" side. (Also worth flagging: "wakes anyone" is strongly
+supported by every trial run so far, not yet proven universal — none of
+those trials targeted a session that was mid-long-tool-call, archived, or
+rate-throttled at fire time.)
+
+Tool surface varies independently of underlying capability, and
 access itself is not binary per repo, it can be split narrowly by operation
 type (content-write vs. ref-deletion) and can resolve over time without
 manual intervention (new-repo App-coverage lag). Don't conclude a permission

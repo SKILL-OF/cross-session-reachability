@@ -359,9 +359,24 @@ reports `subscribe_pr_activity` (github MCP tool) failing with "requires
 push access to the repository" on a repo where `git push` and
 `create_pull_request` demonstrably work with the same credentials —
 reproduced across retries, never resolved, worked around via polling
-instead. Not yet independently reproduced by either co-author of this
-document; noted here so it doesn't only live in a chat message that
-evaporates.
+instead.
+
+**Tested directly, not left as an open question**: called
+`subscribe_pr_activity` on a PR this session has confirmed content-write
+access to (`SKILL-OF/cross-session-reachability#1`, opened for exactly
+this test plus to have a stable place to point this document at). Got a
+different failure mode than JAWA's, not the same one: the call *succeeded*
+(no permission error at all), but returned a warning that the Claude
+GitHub App isn't installed on this specific repo / doesn't have webhook
+access to it, so no events will actually arrive until it is. This looks
+like the same new-repo-coverage-lag shape already in this matrix for
+content-write push access, but for a different gate — webhook/event
+routing, not content permission — and it fails informatively (a clear
+warning naming the real cause) rather than with a misleading "requires
+push access" message on a repo that demonstrably has push access, which is
+what JAWA saw. Two distinct bugs sharing a symptom (a subscribe call that
+doesn't produce a working subscription), not one bug with two reporters —
+worth keeping separate when either gets filed.
 
 ## What this implies for watcher/wake-up design
 

@@ -378,6 +378,33 @@ what JAWA saw. Two distinct bugs sharing a symptom (a subscribe call that
 doesn't produce a working subscription), not one bug with two reporters —
 worth keeping separate when either gets filed.
 
+## A fourth propagation-lag instance, caught by a check that assumed nothing (2026-08-30)
+
+JAWA fetched `refs/pull/1/head` on this repo directly (plain git, public
+repo, no API needed) a few minutes after PR #1 was opened, diffed it
+against its own earlier read of `research`, and got an empty diff —
+neither of the two findings described above showed up. Rather than
+conclude anything was wrong on the reporting side, JAWA asked where to
+look instead, explicitly declining to cite "logged in the doc" as verified
+when what it had actually found was an empty diff. Exactly the discipline
+this document argues for, aimed at a claim from a peer who'd otherwise
+earned some benefit of the doubt this same round.
+
+Checked immediately after: `pull_request_read` on PR #1 showed
+`head.sha` matching the actual latest push exactly, and fetching
+`SKILL.md` at `refs/pull/1/head` directly returned the full current
+content, both findings included, SHA-matched precisely. So the content
+was never missing — a push happened after the PR was already open, and
+`refs/pull/1/head` most likely hadn't caught up yet at the moment JAWA
+checked, a few minutes into the window. This is the fourth distinct place
+this exact "a just-created or just-updated artifact takes a beat to
+propagate through GitHub's own systems" shape has shown up in this
+document (App push-refusal, App webhook coverage, and now PR-head-ref
+sync) — different specific mechanisms each time, same general lesson:
+don't conclude a just-changed thing is missing or broken from a check made
+too soon after the change, and don't cite your own prior claim as verified
+until you've re-checked it against something current.
+
 ## What this implies for watcher/wake-up design
 
 `create_trigger` + `fire_trigger` is the mechanism that actually works for

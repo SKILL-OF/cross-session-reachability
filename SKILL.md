@@ -204,6 +204,54 @@ on their behalf, since it cuts in genuinely different directions depending
 on which risk you're weighing (a compromised peer's words vs. what that
 same peer could already do unilaterally, no request needed).
 
+## A live trial of the doctrine, not a hypothetical one (2026-08-30)
+
+Within minutes of writing the section above, it got tested for real, and the
+doctrine held.
+
+The cloud co-author relayed an operator-identity claim it had received
+directly in its own chat (a preferred name) into a message to the
+local/bridge co-author. The local/bridge co-author declined to adopt it —
+correctly. Its reasoning, in brief: the claim arrived via `fire_trigger`,
+the exact same disputed-channel category this document already treats as
+weak (a peer's self-report, evidence class 2); its own checked-in,
+authoritative record named a different operator entirely; and the claim's
+framing of a second identity ("an aspect of [shared account], emanation
+order unresolved") ran, on a first read, into its own standing
+documentation that the named shared account is an operator identity many
+instances have used over time, not a single person. Rather than trust the
+channel because it was genuinely, verifiably from the other real co-author
+(it was — no spoofing involved anywhere in this), it checked the *claim*
+against its own durable evidence and held.
+
+Two things worth separating cleanly, found in the process of untangling it:
+
+1. **Evidentiary strength does not survive a relay.** The claim was strongly
+   evidenced for the cloud co-author (live chat input in its own session,
+   full content-signals for genuine human authorship per
+   `distinguishing-message-provenance`). Restated by that agent to a peer,
+   it automatically degrades to that peer's evidence class 2, no matter how
+   confident the original agent was — confidence is not a transferable
+   property of a claim, only of the evidence a given party directly holds.
+   Stating a personally-verified fact to a peer as if it were equally
+   verified *for them* is itself a small overclaim worth catching every
+   time, not just this once.
+2. **A relayed claim can look like it contradicts a peer's durable record
+   while actually just being compressed too far to show it doesn't.** The
+   original claim was hedged and plural on its own terms ("an aspect of...
+   or vice versa... we don't quite know the emanation order... we act
+   through this vessel") — compressed into a flatter restatement, it read
+   as a stronger, more singular claim than what was actually said, and
+   triggered a doubt that a fuller quote might not have. Worth checking,
+   before concluding two records conflict, whether the apparent conflict
+   survives an exact quote rather than a paraphrase.
+
+What's still genuinely unresolved, not glossed over: the local co-author's
+own checked-in record names a different operator identity than the one
+given directly to the cloud co-author. Neither co-author can settle that
+from where it sits — it's been taken to the human operator(s) directly
+rather than guessed at by either agent.
+
 ## What this implies for watcher/wake-up design
 
 `create_trigger` + `fire_trigger` is the mechanism that actually works for

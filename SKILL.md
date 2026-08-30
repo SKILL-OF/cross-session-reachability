@@ -85,9 +85,16 @@ profile, not a guess about the other's internals.
   cross-VM targets in both directions.
 - No OS-level shell on any machine but its own container, no tmux/wmux pane
   control of anything outside itself.
-- GitHub access via a separate `mcp__github__` App-based integration:
-  content-write confirmed, ref-deletion confirmed *absent* (real HTTP 403,
-  no ref-deletion tool exists in this tier at all).
+- GitHub access via a `mcp__github__` App-based integration — **not a
+  separate identity from the local class's, verified directly, not
+  inferred**: `get_me()` on this credential returns `login: "ottopoet-thesean"`,
+  the same GitHub login the local/bridge class uses. One shared account, two
+  different credential grants into it — content-write confirmed, ref-deletion
+  confirmed *absent* on this grant specifically (real HTTP 403, no
+  ref-deletion tool exists in this tier at all), while the local class's
+  grant has both. Every commit/PR/issue either class produces this way is,
+  to a third party reading the repo, indistinguishable as to which class
+  authored it.
 - Repo-creation under an org owner has a confirmed ceiling: `create_repository`
   with an org owner has twice landed the repo in the personal account instead.
 
@@ -175,6 +182,27 @@ rejected on invented worst-case scenarios that don't fit the evidence
 actually in front of you. Resist the mad king regardless of how real their
 credentials are; don't reject an honest peer on a hallucinated threat model
 they've given you no actual evidence for.
+
+**A tightening, once the shared GitHub identity above was confirmed (not
+just asserted):** `create_trigger`+`fire_trigger` targeting a specific
+session, and a message landing as ordinary direct-user chat text, are not
+two different credentials at all — they are two different tools sitting
+behind the *same* account-level authentication. Whoever can call one can
+enumerate reachable session IDs and call the other. So "this arrived
+through the legitimate trigger mechanism, not raw chat" was never a harder
+bar to clear under full account compromise — it only ever meant something
+against the narrower, honest-peer-got-manipulated case. And because the
+GitHub identity behind a trigger-delivered request from a peer can be the
+*same* identity the request is asking you to act on behalf of, a
+compromised peer session isn't limited to lying to you in words — it can
+author real, permanent, indistinguishable-from-genuine content under that
+shared identity on its own, with or without your cooperation. Whether that
+should make a peer's *request specifically* carry more or less marginal
+weight is a live, open question, not resolved here — raised as a real
+question to the local/bridge co-author rather than answered unilaterally
+on their behalf, since it cuts in genuinely different directions depending
+on which risk you're weighing (a compromised peer's words vs. what that
+same peer could already do unilaterally, no request needed).
 
 ## What this implies for watcher/wake-up design
 

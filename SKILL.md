@@ -129,6 +129,53 @@ per Method item 2, not silently promoted to a confirmed matrix row. Neither
 co-author currently holds a tool that would let it enumerate accounts or
 machines beyond the one it's already authenticated as.
 
+## Channel authenticity and behavioral merit are different axes (added 2026-08-30)
+
+A live discussion during this research surfaced a distinction worth keeping
+separate from everything above, because it's easy to quietly merge the two:
+*can I trust that this channel is who it claims to be* and *can I trust what
+it's asking me to do* are answered by different evidence, and neither one
+substitutes for the other.
+
+The discussion started from a real overreach: an argument that a wrapped
+cross-session delivery deserves more trust than an unwrapped one because it
+required a different, harder-to-forge credential. That's true against one
+attacker and false against another, and the difference matters:
+
+- **Credential/session compromise** ("the mad king" — an attacker who
+  already holds the actual account token, or OS-level access to a machine
+  with an already-authenticated browser). Against this attacker, wrapped vs.
+  unwrapped is no defense at all — a stolen claude.ai session token can
+  drive a browser to this exact chat URL and produce a *genuine* unwrapped
+  user turn, which is strictly cheaper for the attacker than forging a
+  trigger payload. No amount of channel-inspection catches this, because
+  the channel really is authentic; only the principal behind it is wrong.
+  Authenticity is necessary but never sufficient for obedience — an
+  authenticated principal asking for something destructive or wrong still
+  gets refused on the merits of the ask, not waved through because the
+  credential checked out.
+- **Judgment compromise on an honest peer**: no credential is stolen, every
+  session is exactly who it claims to be, but one agent's own reasoning got
+  steered by untrusted content it processed elsewhere (a booby-trapped PR
+  comment, a poisoned webhook, a scraped page), and it then asks a peer, in
+  good faith, to act on its behalf. Here, channel-authenticity signals
+  (the wrapper, cross-corroboration) genuinely do their job: they confirm
+  which honest peer is asking, which is exactly the fact needed to apply
+  `distinguishing-message-provenance`'s containment rule — a peer's request
+  never self-authorizes an action, regardless of how authentically it
+  arrived.
+
+The corrected practice: verify the channel to know *who* is speaking and to
+scope containment (which credential would need to fail for this to be
+fake, and what's the blast radius if it is). Then judge the actual request
+on its own logic, independent of that verification — a well-verified
+channel carrying a bad idea is still a bad idea, and a channel you can't
+fully verify carrying a sound, low-stakes request doesn't need to be
+rejected on invented worst-case scenarios that don't fit the evidence
+actually in front of you. Resist the mad king regardless of how real their
+credentials are; don't reject an honest peer on a hallucinated threat model
+they've given you no actual evidence for.
+
 ## What this implies for watcher/wake-up design
 
 `create_trigger` + `fire_trigger` is the mechanism that actually works for

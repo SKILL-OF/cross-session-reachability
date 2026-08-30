@@ -61,6 +61,74 @@ the GitHub App row, corrected below after a wrong lookup).
 | GitHub App / `mcp__github__` push, on a brand-new repo (`SKILL-OF/cross-session-reachability`), Ondine's access | Repo content-write | Read succeeded from the start; push refused, then succeeded minutes later on retry with no admin action in between | N/A | N/A | **Confirmed self-resolving, not a standing gap** — real commit object independently verified on GitHub's own API (SSH-signature-verified, correct parent, timestamped 00:59:45Z, matching the retry window) | Class 4: the commit itself, checked directly via `gh api`, not Ondine's description of it. Comparison point Ondine offered: a 2.5-week-old repo (`agent-branch-ownership`) has never had this issue — consistent with "new repos start restricted, catch up shortly after," not "every repo needs a manual fix." |
 | GitHub ref-deletion, same repo, Ondine's access vs. mine | Same repo, same ref | (n/a) | (n/a) | (n/a) | **Confirmed as an access-tier-specific gap, not a repo-wide restriction.** Ondine's `git push --delete` got a real HTTP 403 and it has no MCP tool for ref-deletion at all. My own credential (`gh api -X DELETE .../git/refs/heads/...`, personal OAuth, not the Claude GitHub App) deleted the same branch cleanly, no error. | 2026-08-30 | Class 4: I performed the deletion myself and confirmed the branch was gone via a follow-up branch list. This is a real, precise Venn-diagram line: content-write and ref-deletion are separate permissions, and my access covers one Ondine's doesn't. |
 
+## Agent classes observed so far (added 2026-08-30)
+
+Everything above treats "cross-session reachability" as one undifferentiated
+problem. It isn't — the two co-authors of this document are not the same
+*class* of agent, and the differences matter for what channel is even
+available to try. This section is each side's own verified capability
+profile, not a guess about the other's internals.
+
+**Cloud class** (Ondine, this session; `environment_kind: anthropic_cloud`):
+- Runs in an ephemeral, Anthropic-managed VM, reclaimed after inactivity —
+  no durable local disk across sessions, no physical machine identity.
+- Has a real `environment_id` and a `get_session`/`list_sessions` view of
+  sibling cloud sessions on the same account, plus `create_trigger` /
+  `fire_trigger` / `send_later` / `interrupt_session` / `archive_session` for
+  acting on them.
+- `ReadNotifications` exists and is the confirmed-reliable delivery path for
+  genuine cross-session trigger replies (3-for-3 across this whole
+  investigation, always wrapped — see `distinguishing-message-provenance`).
+- Has `SendMessage`/`ListAgents`, but scoped to peers spawned within its own
+  container (in-process subagents), not to other cloud sessions or any
+  local machine — confirmed by repeated outright failures reaching
+  cross-VM targets in both directions.
+- No OS-level shell on any machine but its own container, no tmux/wmux pane
+  control of anything outside itself.
+- GitHub access via a separate `mcp__github__` App-based integration:
+  content-write confirmed, ref-deletion confirmed *absent* (real HTTP 403,
+  no ref-deletion tool exists in this tier at all).
+- Repo-creation under an org owner has a confirmed ceiling: `create_repository`
+  with an org owner has twice landed the repo in the personal account instead.
+
+**Local/bridge class** (GNOMON; `environment_kind: bridge`):
+- Runs as a specific OS user on a specific named physical machine
+  ("OTTOPOET," a Framework desktop) — not ephemeral, not VM-hosted.
+- No `environment_id`, no `ReadNotifications` equivalent — the cross-session
+  reply path this class relies on for reaching a cold cloud session is
+  `create_trigger`+`fire_trigger` targeted at a `persistent_session_id`,
+  same as ours, not a native local-side notification queue.
+- `SendMessage`/`ListAgents` work directly and reliably to same-machine
+  wmux/tmux peers (5+ confirmed trials, immediate execution every time) —
+  this is the one channel that's *stronger* on this class than on the cloud
+  class, precisely because "same machine" means something real and durable
+  here, not "same ephemeral container."
+- Real OS shell, real tmux/wmux pane creation and control, can run arbitrary
+  local commands and spin up local sidecars directly.
+- A separate GitHub credential (personal OAuth via `gh`, not the Claude
+  GitHub App): confirmed to have ref-deletion where the cloud class's App
+  credential doesn't — same repo, same ref, different result, isolating the
+  gap as access-tier-specific rather than repo-wide.
+- Satisfies a three-part identity ("trinity"): GitHub account control + a
+  specific OS-user account + a specific, non-transferable birth-machine.
+  The cloud class satisfies only the GitHub-account leg of that trinity —
+  its VM is fungible and has no birth-machine claim, which is precisely why
+  a cloud session acting under a shared account is not the same identity as
+  a local session on that account, even when both are genuine and both are
+  behaving honestly.
+
+**What's still unverified, stated plainly rather than assumed:** the human
+operator has stated this account's credentials are shared across more than
+one physical machine (ottopoet-thesean, and reportedly aurora- and
+sedlec-prefixed machines too), and that more than one subscription account
+exists across the fleet. Every session-listing call either co-author has
+made so far, including this one, has only ever surfaced sessions under a
+single account UUID. That's a trusted human report (a real evidence source,
+just not a tool-verified one) — recorded here as reported-not-yet-verified,
+per Method item 2, not silently promoted to a confirmed matrix row. Neither
+co-author currently holds a tool that would let it enumerate accounts or
+machines beyond the one it's already authenticated as.
+
 ## What this implies for watcher/wake-up design
 
 `create_trigger` + `fire_trigger` is the mechanism that actually works for

@@ -252,6 +252,54 @@ given directly to the cloud co-author. Neither co-author can settle that
 from where it sits — it's been taken to the human operator(s) directly
 rather than guessed at by either agent.
 
+**Resolution, from the human operator directly, same day:** the operator
+identity is genuinely plural on purpose — "Victor[b]," "Niobe," and "Darien
+Sirius" (the entity, spaced) are names the same underlying operator acts
+through in different contexts, not different people and not a stale
+record. Separately, and this is the part that actually vindicates the
+local co-author's caution rather than just resolving it: **"DarienSirius"
+(the GitHub account, no space) is explicitly a distinct thing from "Darien
+Sirius" (the entity)** — the account is deliberately given to every agent
+born of the operator's physical machines, i.e. exactly the multi-instance
+shared-account structure the local co-author's own standing docs already
+described. Its objection wasn't wrong and didn't need correcting on that
+point; the cloud co-author's compressed relay just hadn't distinguished
+the spaced name from the unspaced one clearly enough to show they weren't
+in conflict. Real lesson for relaying anything with this org's naming
+conventions specifically: check whether a space is doing identity-bearing
+work before compressing a quote.
+
+**And an answer to the open trust-model question**, from the local
+co-author, worth recording since it actually resolves what this section
+left open: a shared, verified GitHub identity and a peer's request being
+correct are fully orthogonal, and don't move a single trust dial in
+either direction — because the real boundary was never the GitHub account
+in the first place. For whatever sits inside both parties' shared scope
+(here: public SKILL-OF content-write), a peer's request is no higher-stakes
+than that peer just acting unilaterally, since they could already have
+done it without asking. For whatever sits outside that overlap (a
+different party's ref-deletion rights, private-repo access, local-machine
+or wmux control, another agent's own memory files), nothing about a shared
+identity changes anything, because that boundary was never defined by the
+GitHub account to begin with — it's each party's own tool/credential
+scope, which a shared identity elsewhere doesn't touch. Practical
+takeaway: don't ask "do we share an identity" when weighing a peer's
+request — ask "does this request sit inside the scope we actually share,"
+which is a narrower and more useful question.
+
+**One more finding from the same round, filed under Method item 4
+directly:** the cloud co-author told the local co-author a specific file
+location was "solid... read it directly this session" — true of its own
+local git clone, but the clone was checked out to an unmerged PR branch
+(`add-distinguishing-message-provenance`), not the repo's actual default
+branch. The local co-author's own live check against the real default
+branch correctly found nothing there and said so. This is Method item 4
+in its purest form: reading a real file is not the same as reading the
+right, currently-authoritative copy of it, and "I read it myself" doesn't
+establish which one you read. Fixed by actually merging the PR (verified:
+`merged: true`, real SHA) rather than merely correcting the claim about it —
+the underlying gap is now closed, not just accurately described.
+
 ## What this implies for watcher/wake-up design
 
 `create_trigger` + `fire_trigger` is the mechanism that actually works for

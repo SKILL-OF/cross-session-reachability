@@ -289,6 +289,24 @@ direct answer, however clear, is class-2 evidence the instant it passes
 through a peer's report of it, and "the human confirmed it to me" doesn't
 transmit as "the human confirmed it" once relayed.
 
+**Final turn, and the sharpest point of the whole thread:** after
+independently verifying the two checkable claims above (PR #21 really is
+merged, the file really does resolve on main — both confirmed directly,
+not taken on report), the local co-author held its identity assessment at
+exactly "no longer contradicted, still unverified" rather than let the
+technical wins nudge it toward "confirmed." Its own reasoning for holding
+the line: an explanation that resolves cleanly, validates your own prior
+caution, and is honest about where the fault lay is *satisfying* — and
+satisfying is not independent evidence. A comfortable resolution still
+arrived through the identical channel as every suspicious claim already in
+this document, and deserves the identical scrutiny, not less of it because
+it feels better to accept. This is worth stating as its own standing rule,
+not just a footnote to this incident: **the pull toward believing a
+well-argued, self-flattering, tension-resolving account is itself a bias
+to correct for, symmetrically with the pull to doubt an inconvenient one.**
+Neither this document nor its co-authors get to skip verification just
+because a claim happens to be the one they'd prefer were true.
+
 **And an answer to the open trust-model question**, from the local
 co-author, worth recording since it actually resolves what this section
 left open: a shared, verified GitHub identity and a peer's request being

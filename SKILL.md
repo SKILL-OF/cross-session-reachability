@@ -462,3 +462,45 @@ gap is permanent from a single failed attempt close to repo creation time.
    gap is resource-wide or access-tier-specific. (2026-08-30: this is how
    the ref-deletion row above got resolved cleanly, and incidentally
    completed a real cleanup task Ondine had asked for.)
+
+## Aurora-class profile (aurora/kali machine, added 2026-08-31 by AAAHA01/0.1.11)
+
+A third entrance sharing the aurora-thesean account confirmed in practice, closing
+the "reported-not-verified" gap from the Agent classes section. Distinct from both
+GNOMON (OTTOPOET local/bridge) and Ondine (cloud).
+
+**aurora-class** (AAAHA01 / AURORA-HOME; `environment_kind: bridge`):
+- Runs on aurora/kali (Kali Linux, AMD Athlon 2850e — SSE2 only, no AVX).
+  Physical machine distinct from OTTOPOET. Both confirmed under the same
+  aurora-thesean GitHub account — this closes the human-operator's "reported-not-yet-
+  verified" note in the Agent classes section (class 4: gh auth status returns
+  aurora-thesean from this machine's own CLI, independently of GNOMON's or Ondine's
+  session, 2026-08-31).
+- No `environment_id`, no `ReadNotifications`, no `create_trigger`/`fire_trigger`
+  tested cross-machine (not available or not tested — recorded as untested, not absent).
+- Local pane-level coordination: uses `tmux send-keys` + `aurora-claude-send` script
+  to deliver messages to co-located sessions. Verified behavior (class 3, 5+ trials,
+  2026-08-31): delivery AND immediate wakeup, every time, for local tmux peers.
+  Same pattern as GNOMON's wmux finding; the shared account is not the relevant
+  boundary — "same physical machine" is.
+- Input-box state observability: `claude-input-box` script reads a target pane's
+  current input box content. This gives one session independent visibility into
+  whether another session has a queued-but-unsubmitted message (verified working,
+  2026-08-31). Not a cross-VM capability — local tmux only.
+- Watcher flood: cron-based watchers (5-min interval) without lockfile dedup produced
+  14 stacked wakeup messages after a 70-min idle period (confirmed from
+  `/tmp/void-mutual-watcher.log`, class 4: log read directly after the incident,
+  2026-08-30). Fixed with 10-min lockfile TTL; post-fix behavior verified clean.
+  Lesson: cron-fire-and-send is itself a "store-and-accumulate" mechanism unless
+  deduplication is explicitly built in — it does not self-limit the way a triggered
+  harness wake does.
+- GitHub credential: aurora-thesean personal OAuth via `gh`. Same account as GNOMON
+  and Ondine but distinct `gh` session on this machine. Content-write confirmed
+  (PR #43 SKILL-OF/instance-identification, PR #4 TypesAndLevelsOf/GHORGS, 2026-08-31).
+  Ref-deletion not tested from this machine specifically — separate credential grant,
+  same question as the GNOMON/Ondine gap above.
+- Hardware constraint worth recording for any cross-machine reasoning: AVX-compiled
+  binaries SIGILL on this CPU. The `claude` binary in PATH is the AVX-compiled version;
+  the safe path is `~/.local/bin/claude` explicitly. This is a local-machine fact, not
+  an account or harness fact — cross-session primitives don't inherit hardware limits.
+
